@@ -1,0 +1,53 @@
+const express = require('express');
+const sql = require('mssql');
+const { OpenAIClient, AzureKeyCredential } = require('@azure/openai');
+require('dotenv').config();
+
+const app = express();
+app.use(express.json());
+
+const endpoint = process.env.AZURE_OPENAI_ENDPOINT;
+const apiKey = process.env.AZURE_OPENAI_KEY;
+const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT;
+
+const sqlConfig = {
+  user: process.env.SQL_USER,
+  password: process.env.SQL_PASSWORD,
+  server: process.env.SQL_SERVER,
+  database: process.env.SQL_DATABASE,
+  options: {
+    encrypt: true,
+    trustServerCertificate: false,
+  },
+};
+
+const openai = new OpenAIClient(endpoint, new AzureKeyCredential(apiKey));
+
+app.post('/ask', async (req, res) => {
+  const question = req.body.question;
+
+  const systemPrompt = `
+    You are an assistant that translates user questions into SQL queries for the AdventureWorksLT database.
+    Return only the SQL query. Don't include explanation.
+  `;
+
+  try {
+    const completion = await openai.getCompletions(deploymentName, [systemPrompt + "\n" + question], {
+      maxTokens: 200,
+      temperature: 0,
+    });
+
+    const sqlQuery = completion.choices[0].text.trim();
+
+    const pool = await sql.connect(sqlConfig);
+    const result = await pool.request().query(sqlQuery);
+    res.json({ data: result.recordset });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error: " + err.message);
+  }
+});
+
+app.listen(process.env.PORT || 3000, () => {
+  console.log('API server running...');
+});
