@@ -14,7 +14,9 @@ resource sqlServer 'Microsoft.Sql/servers@2022-05-01-preview' = {
 }
 
 resource database 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
-  name: '${sqlServer.name}/adventureworks'
+  parent: sqlServer
+  name: 'adventureworks'
+  location: location
   properties: {
     sampleName: 'AdventureWorksLT'
   }
