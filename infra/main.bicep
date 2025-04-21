@@ -3,6 +3,8 @@ param sqlAdminUser string
 @secure()
 param sqlAdminPassword string
 
+
+
 module sql './sql.bicep' = {
   name: 'sqlDeployment'
   params: {
