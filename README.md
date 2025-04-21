@@ -1,5 +1,30 @@
-# azd-Empower_AdventureWorks_with_AI
-Use Azure AI services to extract insights, automate tasks, or enhance user experience based on data from the AdventureWorks database.
+
+✅ Infrastructure Overview
+We'll prepare the following Azure resources:
+
+
+Azure SQL Server + AdventureWorks DB
+
+Azure OpenAI or Cognitive Services (depending on use case)
+
+App Service Plan + Web App (for hosting frontend/chatbot/demo)
+
+(Optional) Azure ML workspace or Cognitive Search
+
+
+
+🧱 Architecture Overview
+
+
+Browser (React/Next.js)
+   ↓
+Node.js API (Express)
+   ↓
+Azure OpenAI (for SQL generation or Q&A)
+   ↓
+AdventureWorks SQL DB (hosted in Azure)
+
+
 ⚡ Hackathon Theme: “Empower AdventureWorks with AI”
 🕒 Duration: 2 hours
 🧠 Goal:
