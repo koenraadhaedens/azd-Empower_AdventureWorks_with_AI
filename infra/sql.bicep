@@ -22,4 +22,5 @@ resource database 'Microsoft.Sql/servers/databases@2022-05-01-preview' = {
   }
 }
 
-
+output sqlServerName string = sqlServer.name
+output databaseName string = database.name
