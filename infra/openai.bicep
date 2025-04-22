@@ -34,5 +34,5 @@ resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023
 }
 
 output openaiEndpoint string = openaiAccount.properties.endpoint
-output openaiKey string = listKeys(openaiAccount.id, openaiAccount.apiVersion).key1
+output openaiKey string = listKeys(openaiAccount.id, '2023-05-01').key1
 output deploymentName string = openaiDeployment.name
