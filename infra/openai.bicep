@@ -24,7 +24,7 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05
     model: {
       format: 'OpenAI'
       name: 'gpt-35-turbo'
-      version: '1106'
+      version: '0125'
     }
   }
   sku: {
