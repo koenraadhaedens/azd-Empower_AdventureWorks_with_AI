@@ -1,6 +1,3 @@
-var openAiAccountName = 'openai-${uniqueString(resourceGroup().id)}'
-var openAiDeploymentName = 'gpt35'
-
 param location string
 param openaiName string = 'openai-${uniqueString(resourceGroup().id)}'
 
@@ -29,13 +26,10 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05
       name: 'gpt-35-turbo'
       version: '1106'
     }
-    scaleSettings: {
-      scaleType: 'Standard'
-    }
   }
-  dependsOn: [
-    openaiAccount
-  ]
+  sku: {
+    name: 'Standard'
+  }
 }
 
 output openaiName string = openaiAccount.name
