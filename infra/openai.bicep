@@ -26,6 +26,10 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05
       name: 'gpt-35-turbo'
       version: '0125'
     }
+    scaleSettings: {
+      scaleType: 'Manual'
+      capacity: 1
+    }
   }
   sku: {
     name: 'Standard'
