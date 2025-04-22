@@ -17,7 +17,7 @@ resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   }
 }
 
-resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
+resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-03-01-preview' = {
   parent: openaiAccount
   name: 'gpt35'
   properties: {
@@ -26,15 +26,12 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05
       name: 'gpt-35-turbo'
       version: '0125'
     }
-  }
-  sku: {
-    name: 'GPT-35-Turbo'
-    capacity: 1
+    scaleSettings: {
+      scaleType: 'Standard'
+      capacity: 1
+    }
   }
 }
 
 output openaiName string = openaiAccount.name
 output openaiEndpoint string = openaiAccount.properties.endpoint
-
-// output openaiKey string = listKeys(openaiAccount.id, '2023-05-01').key1
-// output deploymentName string = openaiDeployment.name
