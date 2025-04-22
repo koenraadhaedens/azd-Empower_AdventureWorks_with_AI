@@ -50,3 +50,6 @@ module web './webapp.bicep' = {
     location: location
   }
 }
+
+output sqlServerName string = sql.outputs.sqlServerName
+output databaseName string = sql.outputs.databaseName
