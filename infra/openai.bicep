@@ -1,22 +1,5 @@
 param location string
 
-resource openai 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
-  name: 'openai-${uniqueString(resourceGroup().id)}'
-  location: location
-  kind: 'OpenAI'
-  sku: {
-    name: 'S0'
-  }
-  properties: {
-    apiProperties: {
-      customSubDomainName: 'openai-${uniqueString(resourceGroup().id)}'
-    }
-    networkAcls: {
-      defaultAction: 'Allow'
-    }
-  }
-}
-
 resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: 'openai-${uniqueString(resourceGroup().id)}'
   location: location
@@ -26,10 +9,16 @@ resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   }
   properties: {
     apiProperties: {
+      customSubDomainName: 'openai-${uniqueString(resourceGroup().id)}'
       enableDeploymentModelSelection: true
+    }
+    networkAcls: {
+      defaultAction: 'Allow'
     }
   }
 }
+
+
 
 resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: openaiAccount
