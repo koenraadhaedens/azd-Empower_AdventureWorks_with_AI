@@ -28,7 +28,6 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-03
     }
     scaleSettings: {
       scaleType: 'Standard'
-      capacity: 0
     }
   }
 }
