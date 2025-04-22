@@ -17,20 +17,5 @@ resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   }
 }
 
-resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-03-01-preview' = {
-  parent: openaiAccount
-  name: 'gpt35'
-  properties: {
-    model: {
-      format: 'OpenAI'
-      name: 'gpt-35-turbo'
-      version: '0125'
-    }
-    scaleSettings: {
-      scaleType: 'Standard'
-    }
-  }
-}
-
 output openaiName string = openaiAccount.name
 output openaiEndpoint string = openaiAccount.properties.endpoint
