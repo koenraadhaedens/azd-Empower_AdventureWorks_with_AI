@@ -1,15 +1,18 @@
 param location string
 param openaiName string = 'openai-${uniqueString(resourceGroup().id)}'
-
-resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
+param sku string = 'S0'
+resource openAIService 'Microsoft.CognitiveServices/accounts@2024-10-01' = {
   name: openaiName
   location: location
-  kind: 'OpenAI'
+  identity: {
+    type: 'SystemAssigned'
+  }
+  kind: 'AIServices'
   sku: {
-    name: 'S0'
-    tier: 'Standard'
+    name: sku
   }
   properties: {
+    customSubDomainName: openaiName
     networkAcls: {
       defaultAction: 'Allow'
     }
@@ -17,5 +20,21 @@ resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   }
 }
 
-output openaiName string = openaiAccount.name
-output openaiEndpoint string = openaiAccount.properties.endpoint
+resource azopenaideployment 'Microsoft.CognitiveServices/accounts/deployments@2024-10-01' = {
+  parent: openAIService
+  name: 'GPT35'
+  properties: {
+      model: {
+          format: 'OpenAI'
+          name: 'gpt-4'
+          version: 'turbo-2024-04-09'
+      }
+  }
+  sku: {
+    name: 'Standard'
+    capacity: 80
+  }
+}
+
+output openaiName string = openAIService.name
+output openaiEndpoint string = openAIService.properties.endpoint
