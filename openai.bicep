@@ -1,33 +1,31 @@
 param location string
 
+var openAiAccountName = 'openai-${uniqueString(resourceGroup().id)}'
+var openAiDeploymentName = 'gpt35'
+
 resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
-  name: 'openai-${uniqueString(resourceGroup().id)}'
+  name: openAiAccountName
   location: location
   kind: 'OpenAI'
   sku: {
     name: 'S0'
   }
   properties: {
+    publicNetworkAccess: 'Enabled'
     apiProperties: {
-      customSubDomainName: 'openai-${uniqueString(resourceGroup().id)}'
       enableDeploymentModelSelection: true
-    }
-    networkAcls: {
-      defaultAction: 'Allow'
     }
   }
 }
 
-
-
 resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: openaiAccount
-  name: 'gpt35'
+  name: openAiDeploymentName
   properties: {
     model: {
       name: 'gpt-35-turbo'
       format: 'OpenAI'
-      version: '0301'  // or current one
+      version: '0613'
     }
     scaleSettings: {
       scaleType: 'Standard'
@@ -35,5 +33,6 @@ resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023
   }
 }
 
-output openaiEndpoint string = openai.properties.endpoint
-output openaiKey string = listKeys(openai.id, openai.apiVersion).key1
+output openaiEndpoint string = openaiAccount.properties.endpoint
+output openaiKey string = listKeys(openaiAccount.id, openaiAccount.apiVersion).key1
+output deploymentName string = openaiDeployment.name
