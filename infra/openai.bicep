@@ -24,15 +24,12 @@ resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05
     model: {
       format: 'OpenAI'
       name: 'gpt-35-turbo'
-      version: '0125'
-    }
-    scaleSettings: {
-      scaleType: 'Manual'
-      capacity: 1
+      version: '1106'
     }
   }
   sku: {
-    name: 'Standard'
+    name: 'GPT-35-Turbo'
+    capacity: 1
   }
 }
 
