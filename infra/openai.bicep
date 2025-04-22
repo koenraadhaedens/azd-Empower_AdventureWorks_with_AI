@@ -1,38 +1,45 @@
-param location string
-
 var openAiAccountName = 'openai-${uniqueString(resourceGroup().id)}'
 var openAiDeploymentName = 'gpt35'
 
+param location string
+param openaiName string = 'openai-${uniqueString(resourceGroup().id)}'
+
 resource openaiAccount 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
-  name: openAiAccountName
+  name: openaiName
   location: location
   kind: 'OpenAI'
   sku: {
     name: 'S0'
+    tier: 'Standard'
   }
   properties: {
-    publicNetworkAccess: 'Enabled'
-    apiProperties: {
-      enableDeploymentModelSelection: true
+    networkAcls: {
+      defaultAction: 'Allow'
     }
+    publicNetworkAccess: 'Enabled'
   }
 }
 
-resource openaiDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
+resource gptDeployment 'Microsoft.CognitiveServices/accounts/deployments@2023-05-01' = {
   parent: openaiAccount
-  name: openAiDeploymentName
+  name: 'gpt35'
   properties: {
     model: {
-      name: 'gpt-35-turbo'
       format: 'OpenAI'
+      name: 'gpt-35-turbo'
       version: '1106'
     }
     scaleSettings: {
       scaleType: 'Standard'
     }
   }
+  dependsOn: [
+    openaiAccount
+  ]
 }
 
+output openaiName string = openaiAccount.name
 output openaiEndpoint string = openaiAccount.properties.endpoint
+
 // output openaiKey string = listKeys(openaiAccount.id, '2023-05-01').key1
-output deploymentName string = openaiDeployment.name
+// output deploymentName string = openaiDeployment.name
