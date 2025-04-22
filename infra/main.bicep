@@ -48,7 +48,15 @@ module web './webapp.bicep' = {
   name: 'webDeployment'
   params: {
     location: location
+    sqlServerName: sql.outputs.sqlServerName
+    sqlDatabaseName: sql.outputs.databaseName
+    sqlAdminUser: sqlAdminUser
+    sqlAdminPassword: sqlAdminPassword
+    azureOpenAIEndpoint: openai.outputs.openaiEndpoint
+    azureOpenAIKey: 'set manual after deploy'
+    azureOpenAIDeployment: openai.outputs.openaiName
   }
+  
 }
 
 output sqlServerName string = sql.outputs.sqlServerName
